@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PixelLift - AI Image Enhancement</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --primary: #6c63ff;
+        --primary-dark: #5a52d5;
+        --secondary: #ff6584;
+        --dark: #2a2d3e;
+        --light: #f8f9fa;
+        --gray: #6c757d;
+        --success: #28a745;
+        --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--light);
+        color: var(--dark);
+        overflow-x: hidden;
+        scroll-behavior: smooth; /* ✅ Restored smooth scrolling */
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      section {
+        padding: 80px 0;
+      }
+      h1,
+      h2,
+      h3 {
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+      h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: var(--gradient);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+      }
+      .btn-secondary {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+      }
+      .btn-secondary:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      header {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+      }
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+      .logo span {
+        color: var(--secondary);
+      }
+      .nav-links {
+        display: flex;
+        list-style: none;
+      }
+      .nav-links li {
+        margin-left: 30px;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--dark);
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .hero {
+        background: linear-gradient(
+          135deg,
+          rgba(108, 99, 255, 0.1) 0%,
+          rgba(255, 101, 132, 0.1) 100%
+        );
+        padding-top: 150px;
+        padding-bottom: 100px;
+      }
+      .hero-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .hero-text {
+        flex: 1;
+        max-width: 600px;
+      }
+      .hero-image {
+        flex: 1;
+        text-align: center;
+        position: relative;
+      }
+      .hero-image img {
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .features {
+        background-color: white;
+      }
+      .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+      }
+      .feature-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+      .feature-icon {
+        width: 70px;
+        height: 70px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+      .feature-icon i {
+        font-size: 1.8rem;
+        color: white;
+      }
+
+      .upload-section {
+        background: linear-gradient(
+          135deg,
+          rgba(108, 99, 255, 0.05) 0%,
+          rgba(255, 101, 132, 0.05) 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 100px;
+      }
+      .upload-container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        padding: 50px;
+        max-width: 800px;
+        text-align: center;
+      }
+      .upload-area {
+        border: 3px dashed #ddd;
+        border-radius: 15px;
+        padding: 60px 20px;
+        margin: 30px 0;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .upload-area:hover,
+      .upload-area.dragover {
+        border-color: var(--primary);
+        background-color: rgba(108, 99, 255, 0.05);
+      }
+      .upload-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+      }
+      .file-input {
+        display: none;
+      }
+      .upload-preview {
+        margin-top: 30px;
+        display: none;
+      }
+      .preview-image {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin: 0 auto 20px;
+      }
+
+      .results-section {
+        background: white;
+        min-height: 100vh;
+        padding-top: 100px;
+      }
+      .comparison-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin: 40px 0;
+      }
+      .image-box {
+        flex: 1;
+        min-width: 300px;
+        text-align: center;
+      }
+      .result-image {
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      footer {
+        background-color: var(--dark);
+        color: white;
+        padding: 60px 0 30px;
+      }
+      .footer-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .footer-column {
+        flex: 1;
+        min-width: 200px;
+        margin-bottom: 30px;
+      }
+      .footer-links {
+        list-style: none;
+      }
+      .footer-links a {
+        color: #aaa;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+      .footer-links a:hover {
+        color: white;
+      }
+      .copyright {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: #aaa;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <a href="#" class="logo">Pixel<span>Lift</span></a>
+          <ul class="nav-links">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#upload">Enhance</a></li>
+            <li><a href="#features">How It Works</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-text">
+            <h1>Transform Your Images with AI Power</h1>
+            <p>
+              PixelLift uses advanced artificial intelligence to upscale your
+              low-resolution images into stunning high-resolution masterpieces.
+            </p>
+            <a href="#upload" class="btn">Enhance Your Images Now</a>
+          </div>
+          <div class="hero-image">
+            <img
+              src="https://images.unsplash.com/photo-1682687221248-3116ba6ab483?auto=format&fit=crop&w=1000&q=80"
+              alt="AI Enhanced Image"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="upload-section" id="upload">
+      <div class="container">
+        <div class="upload-container">
+          <h2>Enhance Your Image</h2>
+          <p>Upload a low-resolution image and let our AI work its magic</p>
+
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">
+              <h3>Drag & Drop Your Image</h3>
+              <p>or click to browse files</p>
+            </div>
+            <input
+              type="file"
+              id="fileInput"
+              class="file-input"
+              accept="image/*"
+            />
+          </div>
+
+          <div class="upload-preview" id="uploadPreview">
+            <img src="" alt="Preview" class="preview-image" id="previewImage" />
+            <p>Ready to enhance this image?</p>
+            <button class="btn process-btn" id="processBtn">
+              Enhance with AI
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section" id="results" style="display: none">
+      <div class="container">
+        <h2>Your Enhanced Image</h2>
+        <div class="comparison-container">
+          <div class="image-box">
+            <h3>Original Image</h3>
+            <img
+              src=""
+              alt="Original"
+              class="result-image"
+              id="originalImage"
+            />
+          </div>
+          <div class="image-box">
+            <h3>Enhanced Image</h3>
+            <img
+              src=""
+              alt="Enhanced"
+              class="result-image"
+              id="enhancedImage"
+            />
+          </div>
+        </div>
+        <div class="action-buttons">
+          <a href="#" class="btn download-btn" id="downloadBtn">
+            <i class="fas fa-download"></i> Download Enhanced Image
+          </a>
+          <a href="#upload" class="btn btn-secondary">Enhance Another Image</a>
+        </div>
+      </div>
+    </section>
+
+    <footer id="contact">
+      <div class="container">
+        <div class="copyright">
+          <p>&copy; 2025 PixelLift. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const uploadArea = document.getElementById("uploadArea");
+      const fileInput = document.getElementById("fileInput");
+      const uploadPreview = document.getElementById("uploadPreview");
+      const previewImage = document.getElementById("previewImage");
+      const processBtn = document.getElementById("processBtn");
+      const resultsSection = document.getElementById("results");
+      const originalImage = document.getElementById("originalImage");
+      const enhancedImage = document.getElementById("enhancedImage");
+      const downloadBtn = document.getElementById("downloadBtn");
+
+      uploadArea.addEventListener("click", () => fileInput.click());
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+      uploadArea.addEventListener("dragleave", () =>
+        uploadArea.classList.remove("dragover")
+      );
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+        if (e.dataTransfer.files.length)
+          handleFileSelect(e.dataTransfer.files[0]);
+      });
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files.length) handleFileSelect(e.target.files[0]);
+      });
+
+      function handleFileSelect(file) {
+        if (!file.type.match("image.*")) {
+          alert("Please select a valid image file.");
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewImage.src = e.target.result;
+          uploadPreview.style.display = "block";
+          uploadPreview.scrollIntoView({ behavior: "smooth" });
+        };
+        reader.readAsDataURL(file);
+      }
+
+      async function processImage() {
+        const file = fileInput.files[0];
+        if (!file) return alert("Please upload an image first!");
+
+        processBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+        processBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const response = await fetch("/upload", {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
+
+          if (response.ok) {
+            originalImage.src = result.file_url;
+            enhancedImage.src = result.enhanced_url;
+            downloadBtn.href = result.enhanced_url;
+            resultsSection.style.display = "block";
+            resultsSection.scrollIntoView({ behavior: "smooth" });
+          } else {
+            alert(result.error || "Upload failed.");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("An error occurred while uploading the image.");
+        } finally {
+          processBtn.innerHTML = "Enhance with AI";
+          processBtn.disabled = false;
+        }
+      }
+      processBtn.addEventListener("click", processImage);
+    </script>
+  </body>
+</html>
